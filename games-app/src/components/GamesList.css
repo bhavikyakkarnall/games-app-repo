@@ -1,0 +1,12 @@
+.games-list-container{
+    width: 900px;
+    text-align: left;
+}
+
+.games-search-box {
+    width: 600px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-weight: bolder;
+}
+
