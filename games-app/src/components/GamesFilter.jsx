@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 
-export default function GamesFilter({ genres, onFilterChange }) {
+export default function GamesFilter({ publishers, genres, onFilterChange }) {
     const [title, setTitle] = useState("");
     const [genre, setGenre] = useState("");
+    const [publisher, setPublisher] = useState("");
 
     const genreRef = useRef();
     const titleRef = useRef();
+    const publisherRef = useRef();
 
     function handleTitleSearch(e) {
         const titleText = e.target.value;
@@ -19,17 +21,24 @@ export default function GamesFilter({ genres, onFilterChange }) {
         applyFilter();
     }
 
+    function handlePublisherChange(e) {
+        const publisherText = e.target.value;
+        setPublisher(publisherText);
+        applyFilter();
+    }
+
     
     function applyFilter() {
-        onFilterChange(titleRef.current.value, genreRef.current.value);
-
+        onFilterChange(titleRef.current.value, genreRef.current.value, publisherRef.current.value);
     }
 
     function resetFilterControls() {
         setTitle("");
         setGenre("");
-        genreRef.current.value = ""
-        titleRef.current.value = ""
+        setPublisher("");
+        genreRef.current.value = "";
+        titleRef.current.value = "";
+        publisherRef.current.value = "";
     }
 
     function removeFilters() {
@@ -43,6 +52,13 @@ export default function GamesFilter({ genres, onFilterChange }) {
         )
     })
     genreOptionsJsx.unshift(<option value="">All</option>)
+
+    let publisherOptionsJsx = publishers.map(publisher => {
+        return (
+            <option value={publisher}>{publisher}</option>
+        )
+    })
+    publisherOptionsJsx.unshift(<option value="">All</option>)
 
     return (
         <>
@@ -65,7 +81,10 @@ export default function GamesFilter({ genres, onFilterChange }) {
                 </select>
 
                 Publisher
-                <select></select>
+                <select ref={publisherRef}
+                onChange={(e) => {handlePublisherChange(e)}}>
+                    {publisherOptionsJsx}
+                </select>
             </div>
 
         </>

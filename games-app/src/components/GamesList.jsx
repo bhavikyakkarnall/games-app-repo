@@ -8,6 +8,7 @@ export default function GamesList() {
 
     const [allGames, setAllGames] = useState([]);
     const [genres, setGenres] = useState([]);
+    const [publishers, setPublishers] = useState([]);
     const [games, setGames] = useState([]);
     const [errorMessage, setErrorMessage] = useState([])
 
@@ -19,6 +20,7 @@ export default function GamesList() {
                     setGames(gamesJsonData);
                     setAllGames(gamesJsonData);
                     setGenres(getUniqueGenresList(gamesJsonData));
+                    setPublishers(getPublishersList(gamesJsonData));
                 })
                 .catch(error => {
                     setErrorMessage("SERVER DOWN! Unable to connect to server. Please try again later.")
@@ -34,11 +36,17 @@ export default function GamesList() {
         return uniqueGenresList;
     }
 
-    const applyFilter = function(title,genre) {
+    const getPublishersList = function(games) {
+        const allPublishersList = games.map(game => game.publisher);
+        const uniquePublishersList = [...new Set(allPublishersList)];
+        return uniquePublishersList;
+    }
+
+    const applyFilter = function(title,genre,publisher) {
         let filteredGames = allGames.filter(game => 
             game.title.toLowerCase().includes(title.toLowerCase()) &&
-            game.genre.toLowerCase().includes(genre.toLowerCase())
-            // game.genreincludes(genre)
+            game.genre.toLowerCase().includes(genre.toLowerCase()) &&
+            game.publisher.toLowerCase().includes(publisher.toLowerCase())
         );
         setGames(filteredGames);
     }
@@ -131,7 +139,7 @@ export default function GamesList() {
     return (
         <>
             {/* <GamesFilter genres = {genres} onTitleChange={filterGameByTitle} onGenreChange={filterGamesByGenre} onRemoveFilters={showAllGames}></GamesFilter> */}
-            <GamesFilter genres = {genres} onFilterChange={applyFilter} ></GamesFilter>
+            <GamesFilter publishers = {publishers} genres = {genres} onFilterChange={applyFilter} ></GamesFilter>
             {errorMessage && <h3>{errorMessage}</h3>}
             {/* {!errorMessage && <GamesFilter onTitleChange={filterGameByTitle} onRemoveFilters={showAllGames}></GamesFilter>} */}
             <div className="games-list-container">
